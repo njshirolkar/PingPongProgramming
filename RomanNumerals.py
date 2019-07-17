@@ -8,14 +8,14 @@ Convert roman numerals to decimal and back
 
 def toRoman(decimalNumber):
     """ Converts decimal numbers (as string data type) to roman numerals (as string as well)
-    >>> toRoman("10"):
-    "X"
-    >>> toRoman("4"):
-    "IV"
-    >>> toRoman("15"):
-    "XV"
-    >>> toRoman("24"):
-    "XXIV"
+    >>> toRoman("10")
+    'X'
+    >>> toRoman("4")
+    'IV'
+    >>> toRoman("15")
+    'XV'
+    >>> toRoman("24")
+    'XXIV'
     """
     num = int(decimalNumber)
     mapDecimalToRoman = {
@@ -36,14 +36,14 @@ def toRoman(decimalNumber):
 
 def toDecimal(romanNumber):
     """ Converts roman numbers (as string data type) to decimal numerals (as string as well)
-    >>> toDecimal("X"):
-    "10"
-    >>> toDecimal("IV"):
-    "4"
-    >>> toDecimal("XV"):
-    "15"
-    >>> toDecimal("XXIV"):
-    "24"
+    >>> toDecimal("X")
+    '10'
+    >>> toDecimal("IV")
+    '4'
+    >>> toDecimal("XV")
+    '15'
+    >>> toDecimal("XXIV")
+    '24'
     """
     mapRomanToDecimal = {
         'I':1,
