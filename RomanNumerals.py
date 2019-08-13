@@ -10,16 +10,22 @@ decimal = [1, 5, 10, 50, 100, 500, 1000]
 roman = ['I', 'V', 'X', 'L', 'C', 'D', 'M']
 
 def toRoman(decimalNumber: str) -> str:
-    """ Converts decimal numbers (as string data type) to roman numerals (as string as well)
-    >>> toRoman("10")
+    ''' Converts decimal numbers (as string data type) to roman numerals (as string as well)
+    >>> toRoman('10')
     'X'
-    >>> toRoman("4")
+    >>> toRoman('4')
     'IV'
-    >>> toRoman("15")
+    >>> toRoman('15')
     'XV'
-    >>> toRoman("24")
+    >>> toRoman('24')
     'XXIV'
-    """
+    >>> toRoman('7')
+    'VII'
+    >>> toRoman('75')
+    'LXXV'
+    >>> toRoman('98')
+    'CMXCVIII'
+    '''
     num = int(decimalNumber)
     
     # Find closest numeral grater than this number
@@ -73,14 +79,26 @@ def toDecimalInt(romanNumber: str) -> int:
     return toDecimalInt(romanNumber[ptr + 1:]) - blockSum
 
 def toDecimal(romanNumber: str) -> str:
-    """ Converts roman numbers (as string data type) to decimal numerals (as string as well)
-    >>> toDecimal("X")
+    ''' Converts roman numbers (as string data type) to decimal numerals (as string as well)
+    >>> toDecimal('X')
     '10'
-    >>> toDecimal("IV")
+    >>> toDecimal('IV')
     '4'
-    >>> toDecimal("XV")
+    >>> toDecimal('XV')
     '15'
-    >>> toDecimal("XXIV")
+    >>> toDecimal('XXIV')
     '24'
-    """
+    >>> toDecimal('XXXIV')
+    '34'
+    >>> toDecimal('LXXV ')
+    '75'
+    >>> toDecimal('')
+    Traceback (most recent call last):
+      ...
+    ValueError: value '' is not a valid roman number
+    >>> toDecimal('HelloWorld!')
+    Traceback (most recent call last):
+      ...
+    ValueError: value 'HelloWorld!' is not a valid roman number
+    '''
     return str(toDecimalInt(romanNumber))
