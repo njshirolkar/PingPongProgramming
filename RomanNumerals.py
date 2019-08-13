@@ -6,57 +6,99 @@ Convert roman numerals to decimal and back
 
 """
 
-def toRoman(decimalNumber):
-    """ Converts decimal numbers (as string data type) to roman numerals (as string as well)
-    >>> toRoman("10")
-    'X'
-    >>> toRoman("4")
-    'IV'
-    >>> toRoman("15")
-    'XV'
-    >>> toRoman("24")
-    'XXIV'
-    """
-    num = int(decimalNumber)
-    mapDecimalToRoman = {
-        1:'I',
-        2:'II',
-        3:'III',
-        4:'IV',
-        5:'V',
-        10:'X',
-        50:'L',
-        100:'C',
-        500:'D',
-        1000:'M'   
-    }
-    if num in mapDecimalToRoman.keys():
-        return mapDecimalToRoman[num]  
-    return "N"
+decimal = [1, 5, 10, 50, 100, 500, 1000]
+roman = ['I', 'V', 'X', 'L', 'C', 'D', 'M']
 
-def toDecimal(romanNumber):
-    """ Converts roman numbers (as string data type) to decimal numerals (as string as well)
-    >>> toDecimal("X")
+def toRoman(decimalNumber: str) -> str:
+    ''' Converts decimal numbers (as string data type) to roman numerals (as string as well)
+    >>> toRoman('10')
+    'X'
+    >>> toRoman('4')
+    'IV'
+    >>> toRoman('15')
+    'XV'
+    >>> toRoman('24')
+    'XXIV'
+    >>> toRoman('7')
+    'VII'
+    >>> toRoman('75')
+    'LXXV'
+    >>> toRoman('98')
+    'CMXCVIII'
+    '''
+    num = int(decimalNumber)
+    
+    # Find closest numeral grater than this number
+    closest = 0
+    while decimal[closest] < num:
+        closest += 1
+    
+    # Edge case of equals
+    if decimal[closest] == num:
+        return roman[closest]
+    # Edge case if number is greater than half of the next number
+    elif num * 2 > decimal[closest]:
+        return toRoman(decimal[closest] - num) + roman[closest]
+    
+    # Ignore that greater than number, find closest less than number
+    closest -= 1
+    
+    # Find the closest's deicmal value
+    decimalClosest = decimal[closest]
+    
+    # Find the number of repeats and how much is leftover
+    multiplicity = num // decimalClosest
+    remainder = num % decimalClosest
+    
+    # If there is more of the number left, keep on going, otherwise end
+    if remainder > 0:
+        return roman[closest] * multiplicity + toRoman(remainder)
+    return roman[closest] * multiplicity
+
+def lookupValue(romanNumeral: str) -> int:
+    return decimal[roman.index(romanNumeral)]
+
+def toDecimalInt(romanNumber: str) -> int:
+    # Find a block of continous numbers
+    ptr = 0
+    while ptr + 1 < len(romanNumber) and \
+            romanNumber[ptr] == romanNumber[ptr + 1]:
+        ptr += 1
+    # Find the sum of that block
+    blockSum = lookupValue(romanNumber[0]) * (ptr + 1)
+    
+    # If at the end, return the sum
+    if ptr + 1 == len(romanNumber):
+        return blockSum
+    # Else if the next numeral is less than the current numeral, 
+    # add the rest of the number's sum to this block's sum
+    elif lookupValue(romanNumber[ptr]) > lookupValue(romanNumber[ptr + 1]):
+        return blockSum + toDecimalInt(romanNumber[ptr + 1:])
+    # If the next numeral is grater than the current numeral
+    # Subtract this number's sum from the rest of the number
+    return toDecimalInt(romanNumber[ptr + 1:]) - blockSum
+
+def toDecimal(romanNumber: str) -> str:
+    ''' Converts roman numbers (as string data type) to decimal numerals (as string as well)
+    >>> toDecimal('X')
     '10'
-    >>> toDecimal("IV")
+    >>> toDecimal('IV')
     '4'
-    >>> toDecimal("XV")
+    >>> toDecimal('XV')
     '15'
-    >>> toDecimal("XXIV")
+    >>> toDecimal('XXIV')
     '24'
-    """
-    mapRomanToDecimal = {
-        'I':1,
-        'II':2,
-        'III':3,
-        'IV':4,
-        'V':5,
-        'X':10,
-        'L':50,
-        'C':100,
-        'D':500,
-        'M':1000   
-    }
-    if romanNumber in mapRomanToDecimal.keys():
-        return str(mapRomanToDecimal[romanNumber])  
-    return "N"
+    >>> toDecimal('XXXIV')
+    '34'
+    >>> toDecimal('LXXV ')
+    '75'
+    >>> toDecimal('')
+    Traceback (most recent call last):
+      ...
+    ValueError: value '' is not a valid roman number
+    >>> toDecimal('HelloWorld!')
+    Traceback (most recent call last):
+      ...
+    ValueError: value 'HelloWorld!' is not a valid roman number
+    '''
+    return str(toDecimalInt(romanNumber))
